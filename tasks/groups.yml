@@ -1,0 +1,7 @@
+---
+
+- name: groups | Set the security group
+  ec2_group:
+  args:
+    "{{ item }}"
+  with_items: aws_manage_groups

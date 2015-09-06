@@ -1,0 +1,8 @@
+---
+
+- name: vpc | Set the VPC
+  ec2_vpc:
+  args:
+    "{{ item }}"
+  with_items: aws_manage_vpc
+  register: vpc
