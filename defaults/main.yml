@@ -15,21 +15,21 @@ aws_manage_vpc_prefix        : "staging"
 ## For more info check http://docs.ansible.com/ansible/ec2_vpc_module.html
 aws_manage_vpc               :
       - state                : "present"
-        cidr_block           : 10.0.0.0/16
+        cidr_block           : 172.31.0.0/16
         resource_tags        : { "Name": "{{ aws_manage_vpc_prefix }}_vpc" }
         region               : "{{ aws_manage_region }}"
         subnets              :
-          - cidr             : 10.0.0.0/24
+          - cidr             : 172.31.32.0/20
             az               : "{{ aws_manage_az }}"
             resource_tags    : { "Name": "{{ aws_manage_vpc_prefix }}_subnet_public" }
-          - cidr             : 10.0.1.0/24
+          - cidr             : 172.31.16.0/20
             az               : "{{ aws_manage_az }}"
             resource_tags    : { "Name": "{{ aws_manage_vpc_prefix }}_subnet_private" }
         internet_gateway     : yes
         route_tables:
           - subnets:
-             - 10.0.0.0/16
-             - 10.0.0.0/24
+             - 172.31.32.0/20
+             - 172.31.16.0/20
             routes:
                - dest: 0.0.0.0/0
                  gw: igw
@@ -90,4 +90,4 @@ aws_manage_groups            :
     vpc_id                   : "{{ aws_manage_vpc_id }}"
     rules:
       - proto                : "all"
-        cidr_ip               : "10.0.0.0/16"
+        cidr_ip               : "172.31.0.0/16"
