@@ -1,0 +1,48 @@
+# {{ ansible_managed }}
+
+## VPC Facts 
+facts_vpc                   :
+{% for vpc_item in vpc.results %}
+            - id            : {{ vpc_item.vpc.id }}
+              cidr_block    : {{ vpc_item.vpc.cidr_block }}
+              name          : {{ vpc_item.item.resource_tags['Name'] }}
+              region        : {{ vpc_item.item.region }}
+{% endfor %}
+
+## VPC Dictionary
+{% for vpc_item in vpc.results %}
+{{ vpc_item.vpc.id }}       :
+  cidr_block                : {{ vpc_item.vpc.cidr_block }}
+  name                      : {{ vpc_item.item.resource_tags['Name'] }}
+  region                    : {{ vpc_item.item.region }}
+{{ vpc_item.item.resource_tags['Name'] }} : {{ vpc_item.vpc.id }}
+
+{% endfor %}
+
+## Subnet Facts
+facts_subnet                 :
+{% for vpc_item in vpc.results %}
+{% for vpc_subnet in vpc_item.subnets %}
+          - vpc_id           : {{ vpc_item.vpc.id }}
+            vpc_name         : {{ vpc_item.item.resource_tags['Name'] }}
+            name             : {{ vpc_subnet.resource_tags['Name'] }}
+            id               : {{ vpc_subnet.id }}
+            az               : {{ vpc_subnet.az }}
+            cidr             : {{ vpc_subnet.cidr }}
+
+{% endfor %}
+{% endfor %}
+
+## Subnet Dictionary
+{% for vpc_item in vpc.results %}
+{% for vpc_subnet in vpc_item.subnets %}
+{{ vpc_subnet.id }}          :
+            vpc_id           : {{ vpc_item.vpc.id }}
+            vpc_name         : {{ vpc_item.item.resource_tags['Name'] }}
+            name             : {{ vpc_subnet.resource_tags['Name'] }}
+            az               : {{ vpc_subnet.az }}
+            cidr             : {{ vpc_subnet.cidr }}
+{{ vpc_subnet.resource_tags['Name'] }} : {{ vpc_subnet.id }} 
+
+{% endfor %}
+{% endfor %}

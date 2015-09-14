@@ -1,4 +1,13 @@
 ---
+
+# Should we write info about vpc
+aws_manage_vpc_write_info   : true
+aws_manage_vpc_info_path    : "/tmp/{{ aws_manage_vpc_prefix }}.yml"
+
+## Should we load a YAML file with environments
+#aws_manage_vpc_def_path     : "/tmp/myaws.yml"
+
+
 ## AWS access key. If not set then the value of the
 ## AWS_ACCESS_KEY_ID, AWS_ACCESS_KEY or EC2_ACCESS_KEY environment variable is used.
 #aws_manage_access_key        : "blaaablaaa"
@@ -8,9 +17,9 @@
 #aws_manage_secret_key        : "moreblabla"
 
 # [ eu-central-1": Frankfurt, "eu-west-1": "Ireland", "us-west-2": "Oregon", "us-east-1":N. Virigina, "ap-southeast-1": Singapour]
-aws_manage_region            : "eu-west-1"
-aws_manage_az                : "eu-west-1a"
-aws_manage_vpc_prefix        : "staging"
+aws_manage_region            : "{{ aws_region | default('eu-west-1') }}"
+
+aws_manage_vpc_prefix        : "example"
 ## ******** VPC Config ********
 ## For more info check http://docs.ansible.com/ansible/ec2_vpc_module.html
 aws_manage_vpc               :
@@ -20,19 +29,19 @@ aws_manage_vpc               :
         region               : "{{ aws_manage_region }}"
         subnets              :
           - cidr             : 172.31.32.0/20
-            az               : "{{ aws_manage_az }}"
+            az               : "eu-west-1a"
             resource_tags    : { "Name": "{{ aws_manage_vpc_prefix }}_subnet_public" }
           - cidr             : 172.31.16.0/20
-            az               : "{{ aws_manage_az }}"
+            az               : "eu-west-1a"
             resource_tags    : { "Name": "{{ aws_manage_vpc_prefix }}_subnet_private" }
         internet_gateway     : yes
-        route_tables:
-          - subnets:
-             - 172.31.32.0/20
-             - 172.31.16.0/20
-            routes:
-               - dest: 0.0.0.0/0
-                 gw: igw
+        route_tables         :
+          - subnets          :
+                               - 172.31.32.0/20
+                               - 172.31.16.0/20
+            routes           :
+                               - dest: 0.0.0.0/0
+                                 gw  : igw
 
 ## ******** Security Group config ********
 ## For more info check http://docs.ansible.com/ansible/ec2_group_module.html
@@ -90,4 +99,15 @@ aws_manage_groups            :
     vpc_id                   : "{{ aws_manage_vpc_id }}"
     rules:
       - proto                : "all"
-        cidr_ip               : "172.31.0.0/16"
+        cidr_ip              : "172.31.0.0/16"
+
+
+## RDS Subnet group
+aws_manage_rds_subnet_group  :
+    - name                   : "{{aws_manage_vpc_prefix}}-db"
+      description            : PostgresSQL
+      state                  : "present"
+      region                 : "{{ aws_manage_region }}"
+      subnets                :
+                                - "subnet-c9eeb9ac"
+                                - "subnet-28bd2c71"
