@@ -1,0 +1,8 @@
+---
+
+ - name: Creat RDS subnet group
+   rds_subnet_group: 
+   args:
+    "{{ item }}"
+   with_items: aws_manage_rds_subnet_group
+   when: aws_manage_rds_subnet_group is defined

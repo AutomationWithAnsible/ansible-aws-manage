@@ -3,3 +3,6 @@
 - include: vpc.yml
 
 - include: groups.yml
+
+- include: rds_subnet_group.yml
+  when: aws_manage_rds_subnet_group is defined 
