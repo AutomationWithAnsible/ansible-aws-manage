@@ -4,5 +4,8 @@
 
 - include: groups.yml
 
+- include: aws_info.yml
+  when: aws_manage_vpc_write_info
+
 - include: rds_subnet_group.yml
   when: aws_manage_rds_subnet_group is defined 

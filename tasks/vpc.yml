@@ -16,19 +16,3 @@
     "{{ item }}"
   with_items: aws_manage_vpc
   register: vpc
-
-- name: vpc | Write VPC info 
-  template:
-    src="vpc.j2"
-    dest="{{ aws_manage_vpc_info_path }}"
-  when: aws_manage_vpc_write_info
-
-- name: vpc | Check if vpc info file exists
-  stat: 
-    path="{{ aws_manage_vpc_info_path }}"
-  register: vpc_info_file
-  when: aws_manage_vpc_write_info
-
-- name: vpc | Include AWS vpc info file
-  include_vars: "{{ aws_manage_vpc_info_path }}"
-  when: aws_manage_vpc_write_info and vpc_info_file.stat.exists

@@ -1,0 +1,16 @@
+---
+
+- name: aws_info | Write VPC info 
+  template:
+    src="vpc.j2"
+    dest="{{ aws_manage_vpc_info_path }}"
+
+
+- name: aws_info | Check if vpc info file exists
+  stat: 
+    path="{{ aws_manage_vpc_info_path }}"
+  register: vpc_info_file
+
+- name: aws_info | Include/reload AWS vpc info file
+  include_vars: "{{ aws_manage_vpc_info_path }}"
+  when: vpc_info_file.stat.exists
