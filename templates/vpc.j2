@@ -10,14 +10,22 @@ facts_vpc                   :
 {% endfor %}
 
 ## VPC Dictionary
+{% set vpcs_mapping = [] %}
 {% for vpc_item in vpc.results %}
 {{ vpc_item.vpc.id }}       :
   cidr_block                : "{{ vpc_item.vpc.cidr_block }}"
   name                      : "{{ vpc_item.item.resource_tags['Name'] }}"
   region                    : "{{ vpc_item.item.region }}"
-{{ vpc_item.item.resource_tags['Name'] }} : {{ vpc_item.vpc.id }}"
+{% set place_holder = vpcs_mapping.append(vpc_item.item.resource_tags['Name']  ~ " : " ~  vpc_item.vpc.id) %}
 
 {% endfor %}
+
+## VPC name mapping 
+vpc_mapping:
+{% for vpc_map in vpcs_mapping %}
+    {{ vpc_map }}
+{% endfor %}
+
 
 ## Subnet Facts
 facts_subnet                 :
@@ -34,6 +42,7 @@ facts_subnet                 :
 {% endfor %}
 
 ## Subnet Dictionary
+{% set subnets_mapping = [] %}
 {% for vpc_item in vpc.results %}
 {% for vpc_subnet in vpc_item.subnets %}
 {{ vpc_subnet.id }}          :
@@ -42,14 +51,21 @@ facts_subnet                 :
             name             : "{{ vpc_subnet.resource_tags['Name'] }}"
             az               : "{{ vpc_subnet.az }}"
             cidr             : "{{ vpc_subnet.cidr }}"
-{{ vpc_subnet.resource_tags['Name'] }} : {{ vpc_subnet.id }} 
+{% set place_holder = subnets_mapping.append(vpc_subnet.resource_tags['Name']  ~ " : " ~  vpc_subnet.id) %}
 
 {% endfor %}
 {% endfor %}
 
-## Security Groups
+## Subnets name mapping 
+subnet_mapping:
+{% for subnet_map in subnets_mapping %}
+    {{ subnet_map }}
+{% endfor %}
+
+## Security Groups mapping
+security_mapping:
 {% for sec_group in ec2_group.results %}
-{{ sec_group.group_id }}     : "{{ sec_group.item.name }}"
-{{ sec_group.item.name }}    : "{{ sec_group.group_id }}"
+    {{ sec_group.group_id }}     : "{{ sec_group.item.name }}"
+    {{ sec_group.item.name }}    : "{{ sec_group.group_id }}"
 
 {% endfor %}
