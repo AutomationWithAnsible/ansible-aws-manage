@@ -2,6 +2,9 @@
 
 - include: vpc.yml
 
+- include: vpc_routes.yml
+  when: aws_manage_vpc_routes is defined
+
 - include: groups.yml
 
 - include: aws_info.yml

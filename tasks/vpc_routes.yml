@@ -1,0 +1,9 @@
+---
+
+
+- name: vpc_routes | Set the VPC routes
+  ec2_vpc_route_table:
+  args:
+    "{{ item }}"
+  with_items: aws_manage_vpc_routes
+  register: vpc_routes
