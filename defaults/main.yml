@@ -42,6 +42,7 @@ aws_manage_vpc               :
             routes           :
                                - dest: 0.0.0.0/0
                                  gw  : igw
+aws_manage_vpc_routes        : []
 
 ## ******** Security Group config ********
 ## For more info check http://docs.ansible.com/ansible/ec2_group_module.html
