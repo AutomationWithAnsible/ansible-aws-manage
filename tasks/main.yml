@@ -3,7 +3,7 @@
 - include: vpc.yml
 
 - include: vpc_routes.yml
-  when: aws_manage_vpc_routes is defined
+  when: aws_manage_vpc_routes | length > 0
 
 - include: groups.yml
 
