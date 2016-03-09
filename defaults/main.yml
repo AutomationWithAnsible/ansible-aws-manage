@@ -101,14 +101,3 @@ aws_manage_groups            :
     rules:
       - proto                : "all"
         cidr_ip              : "172.31.0.0/16"
-
-
-## RDS Subnet group
-aws_manage_rds_subnet_group  :
-    - name                   : "{{aws_manage_vpc_prefix}}-db"
-      description            : PostgresSQL
-      state                  : "present"
-      region                 : "{{ aws_manage_region }}"
-      subnets                :
-                                - "subnet-c9eeb9ac"
-                                - "subnet-28bd2c71"
